@@ -88,7 +88,7 @@ def track(tracker_model, tracker_name):
             if not color_init_once:
 
                 cv2.rectangle(
-                    image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]), (255, 0, 0), thickness=2)
+                    color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]), (255, 0, 0), thickness=2)
                 box1 = (min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5]), abs(gt_val[4] - gt_val[0]),
                         abs(gt_val[5] - gt_val[1]))
                 tracker.init(color_image, box1)
