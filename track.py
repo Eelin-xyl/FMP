@@ -1,6 +1,8 @@
 import os
 import time
-from typing import NewType
+import multiprocessing
+from multiprocessing import Pipe, Process, shared_memory, Queue
+import numpy as np
 
 import cv2
 
@@ -46,10 +48,14 @@ def iscross(m, n):
 
 
 def track(tracker_model, tracker_name):
+
+    color_queue = Queue()
+    ir_queue = Queue()
+
     for target in filelist:
 
-        if target != 'car10':
-            continue
+        # if target != 'car10':
+        #     continue
 
         path = 'D:/Workspace/VOT2019-rgbtir/' + target
 
@@ -66,11 +72,8 @@ def track(tracker_model, tracker_name):
 
         gt_path = '/'.join([path, 'groundtruth.txt'])
 
-        color_init_once = False
-        ir_init_once = False
-
-        color_tracker = tracker_model()
-        ir_tracker = tracker_model()
+        # color_tracker = tracker_model()
+        # ir_tracker = tracker_model()
 
         # import groundtruth data
         with open(gt_path, "r") as f:
@@ -90,13 +93,32 @@ def track(tracker_model, tracker_name):
             ir_img = os.path.join(ir_path, ir_list[idx])
             ir_image = cv2.imread(ir_img)
 
-            color_tracker, color_image = track_color(tracker_model, color_tracker, color_image, gt_val)
-            ir_tracker, ir_image = track_ir(tracker_model, ir_tracker, ir_image, gt_val)
+            shape = np.shape(color_image)
+            dtype = color_image.dtype
+            # images = multiprocessing.Manager().dict()
+            shm = shared_memory.SharedMemory(
+                create=True, size=color_image.nbytes)
+            image_in = np.ndarray(shape, dtype=dtype, buffer=shm.buf)
+            image_in[:] = color_image.copy()
 
-            # Displaying the image
-            cv2.imshow(tracker_name + ' - color', color_image)
-            cv2.imshow(tracker_name + ' - ir', ir_image)
-            cv2.waitKey(20)
+            # color_SendPort.send(color_image)
+            color_queue.put(color_image)
+            # color_SendPort.send([image_in, gt_val])
+            # color_image, gt_val,
+
+            color_process = Process(target=track_color, args=(
+                tracker_model, tracker_name, color_RecvPort, color_queue), daemon=True)
+            color_process.start()
+            # ir_process = Process(target=track_ir, args=(tracker_model, ir_tracker, ir_image, gt_val), daemon=True)
+            # color_tracker, color_image = track_color(
+            #     tracker_model, color_tracker, color_image, gt_val)
+            # ir_tracker, ir_image = track_ir(
+            #     tracker_model, ir_tracker, ir_image, gt_val)
+
+            # # Displaying the image
+            # cv2.imshow(tracker_name + ' - color', color_image)
+            # cv2.imshow(tracker_name + ' - ir', ir_image)
+            # cv2.waitKey(20)
         # print(target)
 
     # print(tracker_name)
@@ -106,30 +128,43 @@ def track(tracker_model, tracker_name):
     cv2.destroyWindow(tracker_name)
 
 
-def track_color(tracker_model, color_tracker, color_image, gt_val):
+def track_color(tracker_model, tracker_name, color_RecvPort, color_queue):
 
-    hit, box = color_tracker.update(color_image)
-    m = [(gt_val[0], gt_val[1]), (gt_val[4], gt_val[5])]
-    n = [(box[0], box[1]), (box[0] + box[2], box[1] + box[3])]
+    color_tracker = tracker_model()
+    # color_image, gt_val = color_RecvPort.recv()
 
-    if hit and iscross(m, n):
+    while True:
 
-        cv2.rectangle(color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]),
-                      (0, 0, 255), 2)
-        cv2.rectangle(color_image, (int(box[0]), int(box[1])), (int(box[0] + box[2]), int(box[1] + box[3])),
-                      (255, 0, 0), 2)
+        if not color_queue.empty():
+            color_image = color_queue.get()
+            cv2.imshow(tracker_name + ' - color', color_image)
+            cv2.waitKey(20)
+        else:
+            continue
+        color_image, gt_val = color_RecvPort.recv()
+        hit, box = color_tracker.update(color_image)
+        m = [(gt_val[0], gt_val[1]), (gt_val[4], gt_val[5])]
+        n = [(box[0], box[1]), (box[0] + box[2], box[1] + box[3])]
 
-    else:
-        # Not yet init or Track failed
-        color_tracker = tracker_model()
-        box1 = (min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5]),
-                abs(gt_val[4] - gt_val[0]), abs(gt_val[5] - gt_val[1]))
-        color_tracker.init(color_image, box1)
+        if hit and iscross(m, n):
 
-        cv2.rectangle(color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]),
-                      (0, 255, 0), thickness=2)
+            cv2.rectangle(color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]),
+                          (0, 0, 255), 2)
+            cv2.rectangle(color_image, (int(box[0]), int(box[1])), (int(box[0] + box[2]), int(box[1] + box[3])),
+                          (255, 0, 0), 2)
 
-    return color_tracker, color_image
+        else:
+            # Not yet init or Track failed
+            color_tracker = tracker_model()
+            box1 = (min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5]),
+                    abs(gt_val[4] - gt_val[0]), abs(gt_val[5] - gt_val[1]))
+            color_tracker.init(color_image, box1)
+
+            cv2.rectangle(color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]),
+                          (0, 255, 0), thickness=2)
+
+        cv2.imshow(tracker_name + ' - color', color_image)
+        cv2.waitKey(20)
 
 
 def track_ir(tracker_model, ir_tracker, ir_image, gt_val):
@@ -158,9 +193,10 @@ def track_ir(tracker_model, ir_tracker, ir_image, gt_val):
     return ir_tracker, ir_image
 
 
-# track(cv2.TrackerBoosting_create, 'BOOSTING')    # 0
-# track(cv2.TrackerMIL_create, 'MIL')    # 0
-# track(cv2.TrackerKCF_create, 'KCF')    # 1074
-# track(cv2.TrackerTLD_create, 'TLD')    # 34
-# track(cv2.TrackerMedianFlow_create, 'MEDIANFLOW')    # 113
-track(cv2.TrackerCSRT_create, 'CSRT')  # 16
+if __name__ == "__main__":
+    # track(cv2.TrackerBoosting_create, 'BOOSTING')    # 0
+    # track(cv2.TrackerMIL_create, 'MIL')    # 0
+    # track(cv2.TrackerKCF_create, 'KCF')    # 1074
+    # track(cv2.TrackerTLD_create, 'TLD')    # 34
+    # track(cv2.TrackerMedianFlow_create, 'MEDIANFLOW')    # 113
+    track(cv2.TrackerCSRT_create, 'CSRT')  # 16
