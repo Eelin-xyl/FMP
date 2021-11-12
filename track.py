@@ -3,7 +3,6 @@ import time
 import multiprocessing
 from multiprocessing import Pipe, Process, shared_memory, Queue
 import numpy as np
-
 import cv2
 
 filelist = []
@@ -51,6 +50,29 @@ def track(tracker_model, tracker_name):
 
     color_queue = Queue()
     ir_queue = Queue()
+    color_res_queue = Queue()
+    ir_res_queue = Queue()
+
+    read_process = Process(target=read_data, args=(color_queue, ir_queue))
+    read_process.start()
+
+    color_process = Process(target=track_color, args=(tracker_model, color_queue, color_res_queue))
+    color_process.start()
+
+    ir_process = Process(target=track_ir, args=(tracker_model, ir_queue, ir_res_queue))
+    ir_process.start()
+
+    show_process = Process(target=show_res, args=(tracker_name, color_res_queue, ir_res_queue))
+    show_process.start()
+
+    # print(tracker_name)
+    # print('Miss_color: ', miss_color)
+    # print('Accuracy_color: ', accuracy_color)
+    # print()
+    # cv2.destroyWindow(tracker_name)
+
+
+def read_data(color_queue, ir_queue):
 
     for target in filelist:
 
@@ -72,9 +94,6 @@ def track(tracker_model, tracker_name):
 
         gt_path = '/'.join([path, 'groundtruth.txt'])
 
-        # color_tracker = tracker_model()
-        # ir_tracker = tracker_model()
-
         # import groundtruth data
         with open(gt_path, "r") as f:
 
@@ -93,104 +112,87 @@ def track(tracker_model, tracker_name):
             ir_img = os.path.join(ir_path, ir_list[idx])
             ir_image = cv2.imread(ir_img)
 
-            shape = np.shape(color_image)
-            dtype = color_image.dtype
-            # images = multiprocessing.Manager().dict()
-            shm = shared_memory.SharedMemory(
-                create=True, size=color_image.nbytes)
-            image_in = np.ndarray(shape, dtype=dtype, buffer=shm.buf)
-            image_in[:] = color_image.copy()
-
-            # color_SendPort.send(color_image)
-            color_queue.put(color_image)
-            # color_SendPort.send([image_in, gt_val])
-            # color_image, gt_val,
-
-            color_process = Process(target=track_color, args=(
-                tracker_model, tracker_name, color_RecvPort, color_queue), daemon=True)
-            color_process.start()
-            # ir_process = Process(target=track_ir, args=(tracker_model, ir_tracker, ir_image, gt_val), daemon=True)
-            # color_tracker, color_image = track_color(
-            #     tracker_model, color_tracker, color_image, gt_val)
-            # ir_tracker, ir_image = track_ir(
-            #     tracker_model, ir_tracker, ir_image, gt_val)
-
-            # # Displaying the image
-            # cv2.imshow(tracker_name + ' - color', color_image)
-            # cv2.imshow(tracker_name + ' - ir', ir_image)
-            # cv2.waitKey(20)
-        # print(target)
-
-    # print(tracker_name)
-    # print('Miss_color: ', miss_color)
-    # print('Accuracy_color: ', accuracy_color)
-    # print()
-    cv2.destroyWindow(tracker_name)
+            color_queue.put([color_image, gt_val])
+            ir_queue.put([ir_image, gt_val])
 
 
-def track_color(tracker_model, tracker_name, color_RecvPort, color_queue):
+def track_color(tracker_model, color_queue, color_res_queue):
 
     color_tracker = tracker_model()
-    # color_image, gt_val = color_RecvPort.recv()
 
     while True:
 
-        if not color_queue.empty():
-            color_image = color_queue.get()
-            cv2.imshow(tracker_name + ' - color', color_image)
-            cv2.waitKey(20)
-        else:
+        if color_queue.empty():
             continue
-        color_image, gt_val = color_RecvPort.recv()
-        hit, box = color_tracker.update(color_image)
-        m = [(gt_val[0], gt_val[1]), (gt_val[4], gt_val[5])]
-        n = [(box[0], box[1]), (box[0] + box[2], box[1] + box[3])]
-
-        if hit and iscross(m, n):
-
-            cv2.rectangle(color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]),
-                          (0, 0, 255), 2)
-            cv2.rectangle(color_image, (int(box[0]), int(box[1])), (int(box[0] + box[2]), int(box[1] + box[3])),
-                          (255, 0, 0), 2)
-
         else:
-            # Not yet init or Track failed
-            color_tracker = tracker_model()
-            box1 = (min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5]),
-                    abs(gt_val[4] - gt_val[0]), abs(gt_val[5] - gt_val[1]))
-            color_tracker.init(color_image, box1)
+            color_image, gt_val = color_queue.get()
+            hit, box = color_tracker.update(color_image)
+            m = [(gt_val[0], gt_val[1]), (gt_val[4], gt_val[5])]
+            n = [(box[0], box[1]), (box[0] + box[2], box[1] + box[3])]
 
-            cv2.rectangle(color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]),
-                          (0, 255, 0), thickness=2)
+            if hit and iscross(m, n):
 
-        cv2.imshow(tracker_name + ' - color', color_image)
-        cv2.waitKey(20)
+                cv2.rectangle(color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]),
+                              (0, 0, 255), 2)
+                cv2.rectangle(color_image, (int(box[0]), int(box[1])), (int(box[0] + box[2]), int(box[1] + box[3])),
+                              (255, 0, 0), 2)
+
+            else:
+                # Not yet init or Track failed
+                color_tracker = tracker_model()
+                box1 = (min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5]),
+                        abs(gt_val[4] - gt_val[0]), abs(gt_val[5] - gt_val[1]))
+                color_tracker.init(color_image, box1)
+
+                cv2.rectangle(color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]),
+                              (0, 255, 0), thickness=2)
+
+            color_res_queue.put(color_image)
 
 
-def track_ir(tracker_model, ir_tracker, ir_image, gt_val):
+def track_ir(tracker_model, ir_queue, ir_res_queue):
 
-    hit, box = ir_tracker.update(ir_image)
-    m = [(gt_val[2], gt_val[3]), (gt_val[6], gt_val[7])]
-    n = [(box[0], box[1]), (box[0] + box[2], box[1] + box[3])]
+    ir_tracker = tracker_model()
 
-    if hit and iscross(m, n):
+    while True:
 
-        cv2.rectangle(ir_image, (gt_val[2], gt_val[3]), (gt_val[6], gt_val[7]),
-                      (0, 0, 255), 2)
-        cv2.rectangle(ir_image, (int(box[0]), int(box[1])), (int(box[0] + box[2]), int(box[1] + box[3])),
-                      (255, 0, 0), 2)
+        if ir_queue.empty():
+            continue
+        else:
+            ir_image, gt_val = ir_queue.get()
+            hit, box = ir_tracker.update(ir_image)
+            m = [(gt_val[2], gt_val[3]), (gt_val[6], gt_val[7])]
+            n = [(box[0], box[1]), (box[0] + box[2], box[1] + box[3])]
 
-    else:
-        # Not yet init or Track failed
-        ir_tracker = tracker_model()
-        box1 = (min(gt_val[2], gt_val[6]), min(gt_val[3], gt_val[6]),
-                abs(gt_val[6] - gt_val[2]), abs(gt_val[7] - gt_val[3]))
-        ir_tracker.init(ir_image, box1)
+            if hit and iscross(m, n):
 
-        cv2.rectangle(ir_image, (gt_val[2], gt_val[3]), (gt_val[6], gt_val[7]),
-                      (0, 255, 0), thickness=2)
+                cv2.rectangle(ir_image, (gt_val[2], gt_val[3]), (gt_val[6], gt_val[7]),
+                              (0, 0, 255), 2)
+                cv2.rectangle(ir_image, (int(box[0]), int(box[1])), (int(box[0] + box[2]), int(box[1] + box[3])),
+                              (255, 0, 0), 2)
 
-    return ir_tracker, ir_image
+            else:
+                # Not yet init or Track failed
+                ir_tracker = tracker_model()
+                box1 = (min(gt_val[2], gt_val[6]), min(gt_val[3], gt_val[6]),
+                        abs(gt_val[6] - gt_val[2]), abs(gt_val[7] - gt_val[3]))
+                ir_tracker.init(ir_image, box1)
+
+                cv2.rectangle(ir_image, (gt_val[2], gt_val[3]), (gt_val[6], gt_val[7]),
+                              (0, 255, 0), thickness=2)
+
+            ir_res_queue.put(ir_image)
+
+
+def show_res(tracker_name, color_res_queue, ir_res_queue):
+
+    while True:
+
+        if not color_res_queue.empty() and not ir_res_queue.empty():
+            cv2.imshow(tracker_name + ' - color', color_res_queue.get())
+            cv2.waitKey(20)
+            cv2.imshow(tracker_name + ' - ir', ir_res_queue.get())
+            cv2.waitKey(20)
 
 
 if __name__ == "__main__":
