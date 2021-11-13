@@ -4,7 +4,7 @@ import multiprocessing
 from multiprocessing import Pipe, Process, shared_memory, Queue
 import numpy as np
 import cv2
-from tools import iscross
+from tools import is_cross
 
 
 def track_ir(tracker_model, ir_queue, ir_res_queue):
@@ -21,7 +21,7 @@ def track_ir(tracker_model, ir_queue, ir_res_queue):
             m = [(gt_val[2], gt_val[3]), (gt_val[6], gt_val[7])]
             n = [(box[0], box[1]), (box[0] + box[2], box[1] + box[3])]
 
-            if hit and iscross(m, n):
+            if hit and is_cross(m, n):
 
                 cv2.rectangle(ir_image, (gt_val[2], gt_val[3]), (gt_val[6], gt_val[7]),
                               (0, 0, 255), 2)

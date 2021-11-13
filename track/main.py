@@ -12,9 +12,9 @@ from tools import show_res
 
 def track(tracker_model, tracker_name):
 
-    filelist = []
+    file_list = []
     for root, dirs, files in os.walk('D:/Workspace/VOT2019-rgbtir'):
-        filelist = dirs
+        file_list = dirs
         break
 
     color_queue = Queue()
@@ -22,7 +22,7 @@ def track(tracker_model, tracker_name):
     color_res_queue = Queue()
     ir_res_queue = Queue()
 
-    read_process = Process(target=read_data, args=(filelist, color_queue, ir_queue))
+    read_process = Process(target=read_data, args=(file_list, color_queue, ir_queue))
     read_process.start()
 
     color_process = Process(target=track_color, args=(tracker_model, color_queue, color_res_queue))

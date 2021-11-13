@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 
 
-def iscross(m, n):
+def is_cross(m, n):
     # A = [
     #         (x1, y1),     LeftTop
     #         (x2, y2)      RightBottom

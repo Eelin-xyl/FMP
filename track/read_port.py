@@ -6,9 +6,9 @@ import numpy as np
 import cv2
 
 
-def read_data(filelist, color_queue, ir_queue):
+def read_data(file_list, color_queue, ir_queue):
 
-    for target in filelist:
+    for target in file_list:
 
         # if target != 'car10':
         #     continue

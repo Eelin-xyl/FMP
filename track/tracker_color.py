@@ -4,7 +4,7 @@ import multiprocessing
 from multiprocessing import Pipe, Process, shared_memory, Queue
 import numpy as np
 import cv2
-from tools import iscross
+from tools import is_cross
 
 
 def track_color(tracker_model, color_queue, color_res_queue):
@@ -21,7 +21,7 @@ def track_color(tracker_model, color_queue, color_res_queue):
             m = [(gt_val[0], gt_val[1]), (gt_val[4], gt_val[5])]
             n = [(box[0], box[1]), (box[0] + box[2], box[1] + box[3])]
 
-            if hit and iscross(m, n):
+            if hit and is_cross(m, n):
 
                 cv2.rectangle(color_image, (gt_val[0], gt_val[1]), (gt_val[4], gt_val[5]),
                               (0, 0, 255), 2)
