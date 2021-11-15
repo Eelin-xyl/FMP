@@ -1,0 +1,7 @@
+http://www.opencv.org.cn/opencvdoc/2.3.2/html/doc/tutorials/imgproc/histograms/template_matching/template_matching.html
+
+https://www.cnblogs.com/skyfsm/p/6884253.html
+
+keywords 模板匹配
+
+论文可能用到  https://www.cnblogs.com/FHC1994/p/9123393.html
