@@ -47,32 +47,37 @@ def show_res(tracker_name, color_res_queue, ir_res_queue):
 
         if not color_res_queue.empty() and not ir_res_queue.empty():
 
-            image = color_res_queue.get()
-            heatmap = ir_res_queue.get()
-
-            # 灰度化heatmap
-            heatmap_g = heatmap.astype(np.uint8)
-            # 热力图伪彩色
-            heatmap_color = cv2.applyColorMap(heatmap_g, cv2.COLORMAP_JET)
-
-            # color_map = cv2.applyColorMap(image, cv2.COLORMAP_JET)
-            color_map = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            heatmap_color = cv2.cvtColor(heatmap_color, cv2.COLOR_BGR2GRAY)
-            # overlay热力图
-            # merge_img = image.copy()
-            # heatmap_img = heatmap_color.copy()
-            # overlay = image.copy()
-            # alpha = 0.25  # 设置覆盖图片的透明度
-            # # cv2.rectangle(overlay, (0, 0), (merge_img.shape[1], merge_img.shape[0]), (0, 0, 0), -1) # 设置蓝色为热度图基本色
-            # cv2.addWeighted(overlay, alpha, merge_img, 1 - alpha, 0, merge_img)  # 将背景热度图覆盖到原图
-            # cv2.addWeighted(heatmap_img, alpha, merge_img, 1 - alpha, 0, merge_img)  # 将热度图覆盖到原图
-            #     # return merge_img
+            # image = color_res_queue.get()
+            # heatmap = ir_res_queue.get()
             #
-            # cv2.imshow(tracker_name + ' - merge', merge_img)
+            # # 灰度化heatmap
+            # heatmap_g = heatmap.astype(np.uint8)
+            # # 热力图伪彩色
+            # heatmap_color = cv2.applyColorMap(heatmap_g, cv2.COLORMAP_JET)
+            #
+            # # color_map = cv2.applyColorMap(image, cv2.COLORMAP_JET)
+            # color_map = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            # heatmap_color = cv2.cvtColor(heatmap_color, cv2.COLOR_BGR2GRAY)
+            # # overlay热力图
+            # # merge_img = image.copy()
+            # # heatmap_img = heatmap_color.copy()
+            # # overlay = image.copy()
+            # # alpha = 0.25  # 设置覆盖图片的透明度
+            # # # cv2.rectangle(overlay, (0, 0), (merge_img.shape[1], merge_img.shape[0]), (0, 0, 0), -1) # 设置蓝色为热度图基本色
+            # # cv2.addWeighted(overlay, alpha, merge_img, 1 - alpha, 0, merge_img)  # 将背景热度图覆盖到原图
+            # # cv2.addWeighted(heatmap_img, alpha, merge_img, 1 - alpha, 0, merge_img)  # 将热度图覆盖到原图
+            # #     # return merge_img
+            # #
+            # # cv2.imshow(tracker_name + ' - merge', merge_img)
+            # # cv2.waitKey(20)
+            # cv2.imshow(tracker_name + ' - heatmap_color', heatmap_color)
             # cv2.waitKey(20)
-            cv2.imshow(tracker_name + ' - heatmap_color', heatmap_color)
+            # # cv2.imshow(tracker_name + ' - overlay', overlay)
+            # # cv2.waitKey(20)
+            # cv2.imshow('color_map', color_map)
+            # cv2.waitKey(20)
+
+            cv2.imshow(tracker_name + ' - color', color_res_queue.get())
             cv2.waitKey(20)
-            # cv2.imshow(tracker_name + ' - overlay', overlay)
-            # cv2.waitKey(20)
-            cv2.imshow('color_map', color_map)
+            cv2.imshow(tracker_name + ' - ir', ir_res_queue.get())
             cv2.waitKey(20)

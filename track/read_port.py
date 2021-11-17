@@ -37,7 +37,7 @@ def read_data(file_list, color_queue, ir_queue):
 
         for idx in range(img_num):
             gt_val = gt_val_list[idx].split(',')
-            gt_val = [int(float(i)) for i in gt_val]
+            gt_val = tuple([int(float(i)) for i in gt_val])
 
             # get color and ir picture by cv2
             color_img = os.path.join(color_path, color_list[idx])
@@ -46,5 +46,12 @@ def read_data(file_list, color_queue, ir_queue):
             ir_img = os.path.join(ir_path, ir_list[idx])
             ir_image = cv2.imread(ir_img)
 
-            color_queue.put([color_image, gt_val])
-            ir_queue.put([ir_image, gt_val])
+            # process gt_val
+            color_gt_val = ((min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5])),
+                            (max(gt_val[0], gt_val[4]), max(gt_val[1], gt_val[5])))
+
+            ir_gt_val = ((min(gt_val[2], gt_val[6]), min(gt_val[3], gt_val[6])),
+                         (max(gt_val[2], gt_val[6]), max(gt_val[3], gt_val[6])))
+
+            color_queue.put((color_image, color_gt_val))
+            ir_queue.put((ir_image, ir_gt_val))
