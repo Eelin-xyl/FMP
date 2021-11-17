@@ -7,11 +7,11 @@ def worker(interval, queue, recv_port):
     n = 5
     while n > 0:
         # t, a = queue.get()
-        r, c = recv_port.recv()
+        r = recv_port.recv()
         # print(t)
         # print(a)
         print("The time is {0}".format(time.ctime()))
-        print(r, c)
+        print(r)
         time.sleep(interval)
         n -= 1
 
