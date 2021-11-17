@@ -41,42 +41,34 @@ def is_cross(m, n):
     # return abs(w[1] - w[2]) * abs(h[1] - h[2])
 
 
+def cover_img(raw_img):
+
+    raw_img = cv2.cvtColor(raw_img, cv2.COLOR_BGR2GRAY)
+    raw_img = cv2.adaptiveThreshold(raw_img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,
+                                    5, 3)
+
+    return raw_img
+
+
+def sensor_miss_area(ir_image, gt_val):
+    expand = 0.2
+    x1 = max(0, int(gt_val[0][0] - (gt_val[1][0] - gt_val[0][0]) / 2 * expand))
+    y1 = max(0, int(gt_val[0][1] - (gt_val[1][1] - gt_val[0][1]) / 2 * expand))
+    x2 = min(ir_image.shape[0], int(gt_val[1][0] + (gt_val[1][0] - gt_val[0][0]) / 2 * expand))
+    y2 = min(ir_image.shape[1], int(gt_val[1][1] + (gt_val[1][1] - gt_val[0][1]) / 2 * expand))
+    target_area = ir_image[y1:y2, x1:x2]
+
+    return target_area
+
+
 def show_res(tracker_name, color_res_queue, ir_res_queue):
 
     while True:
 
         if not color_res_queue.empty() and not ir_res_queue.empty():
 
-            # image = color_res_queue.get()
-            # heatmap = ir_res_queue.get()
-            #
-            # # 灰度化heatmap
-            # heatmap_g = heatmap.astype(np.uint8)
-            # # 热力图伪彩色
-            # heatmap_color = cv2.applyColorMap(heatmap_g, cv2.COLORMAP_JET)
-            #
-            # # color_map = cv2.applyColorMap(image, cv2.COLORMAP_JET)
-            # color_map = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            # heatmap_color = cv2.cvtColor(heatmap_color, cv2.COLOR_BGR2GRAY)
-            # # overlay热力图
-            # # merge_img = image.copy()
-            # # heatmap_img = heatmap_color.copy()
-            # # overlay = image.copy()
-            # # alpha = 0.25  # 设置覆盖图片的透明度
-            # # # cv2.rectangle(overlay, (0, 0), (merge_img.shape[1], merge_img.shape[0]), (0, 0, 0), -1) # 设置蓝色为热度图基本色
-            # # cv2.addWeighted(overlay, alpha, merge_img, 1 - alpha, 0, merge_img)  # 将背景热度图覆盖到原图
-            # # cv2.addWeighted(heatmap_img, alpha, merge_img, 1 - alpha, 0, merge_img)  # 将热度图覆盖到原图
-            # #     # return merge_img
-            # #
-            # # cv2.imshow(tracker_name + ' - merge', merge_img)
-            # # cv2.waitKey(20)
-            # cv2.imshow(tracker_name + ' - heatmap_color', heatmap_color)
-            # cv2.waitKey(20)
-            # # cv2.imshow(tracker_name + ' - overlay', overlay)
-            # # cv2.waitKey(20)
-            # cv2.imshow('color_map', color_map)
-            # cv2.waitKey(20)
-
-            cv2.imshow(tracker_name + ' - color', color_res_queue.get())
-            cv2.imshow(tracker_name + ' - ir', ir_res_queue.get())
+            color_res = color_res_queue.get()
+            ir_res = ir_res_queue.get()
+            cv2.imshow(tracker_name + ' - color', color_res)
+            cv2.imshow(tracker_name + ' - ir', ir_res)
             cv2.waitKey(40)

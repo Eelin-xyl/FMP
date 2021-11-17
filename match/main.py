@@ -31,15 +31,15 @@ def track(tracker_model, tracker_name):
     ir_queue = Queue()
     color_res_queue = Queue()
     ir_res_queue = Queue()
-    label_queue = Queue()
+    tmp_queue = Queue()
 
     read_process = Process(target=read_data, args=(file_list, path, color_queue, ir_queue))
     read_process.start()
 
-    color_process = Process(target=track_color, args=(tracker_model, color_queue, color_res_queue, label_queue))
+    color_process = Process(target=track_color, args=(tracker_model, color_queue, color_res_queue, tmp_queue))
     color_process.start()
 
-    ir_process = Process(target=track_ir, args=(tracker_model, ir_queue, ir_res_queue, label_queue))
+    ir_process = Process(target=track_ir, args=(tracker_model, ir_queue, ir_res_queue, tmp_queue))
     ir_process.start()
 
     show_process = Process(target=show_res, args=(tracker_name, color_res_queue, ir_res_queue))

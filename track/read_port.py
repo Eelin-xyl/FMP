@@ -7,6 +7,7 @@ import cv2
 
 
 def read_data(file_list, path, color_queue, ir_queue):
+
     folder_path = path
 
     for target in file_list:
