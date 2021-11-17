@@ -50,8 +50,8 @@ def read_data(file_list, color_queue, ir_queue):
             color_gt_val = ((min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5])),
                             (max(gt_val[0], gt_val[4]), max(gt_val[1], gt_val[5])))
 
-            ir_gt_val = ((min(gt_val[2], gt_val[6]), min(gt_val[3], gt_val[6])),
-                         (max(gt_val[2], gt_val[6]), max(gt_val[3], gt_val[6])))
+            ir_gt_val = ((min(gt_val[2], gt_val[6]), min(gt_val[3], gt_val[7])),
+                         (max(gt_val[2], gt_val[6]), max(gt_val[3], gt_val[7])))
 
             color_queue.put((color_image, color_gt_val))
             ir_queue.put((ir_image, ir_gt_val))

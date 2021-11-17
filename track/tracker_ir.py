@@ -31,10 +31,8 @@ def track_ir(tracker_model, ir_queue, ir_res_queue):
             else:
                 # Not yet init or Track failed
                 ir_tracker = tracker_model()
-                box1 = (gt_val[0][0], gt_val[0][1],
-                        gt_val[1][0] - gt_val[0][0], gt_val[1][1] - gt_val[0][1])
+                box1 = (gt_val[0][0], gt_val[0][1], gt_val[1][0] - gt_val[0][0], gt_val[1][1] - gt_val[0][1])
                 ir_tracker.init(ir_image, box1)
-
                 cv2.rectangle(ir_image, (gt_val[0][0], gt_val[0][1]), (gt_val[1][0], gt_val[1][1]),
                               (0, 255, 0), thickness=2)
 

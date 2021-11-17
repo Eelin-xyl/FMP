@@ -31,10 +31,8 @@ def track_color(tracker_model, color_queue, color_res_queue):
             else:
                 # Not yet init or Track failed
                 color_tracker = tracker_model()
-                box1 = (gt_val[0][0], gt_val[0][1],
-                        gt_val[1][0] - gt_val[0][0], gt_val[1][1] - gt_val[0][1])
+                box1 = (gt_val[0][0], gt_val[0][1], gt_val[1][0] - gt_val[0][0], gt_val[1][1] - gt_val[0][1])
                 color_tracker.init(color_image, box1)
-
                 cv2.rectangle(color_image, (gt_val[0][0], gt_val[0][1]), (gt_val[1][0], gt_val[1][1]),
                               (0, 255, 0), thickness=2)
 
