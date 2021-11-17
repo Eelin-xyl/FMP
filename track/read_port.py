@@ -6,18 +6,20 @@ import numpy as np
 import cv2
 
 
-def read_data(file_list, color_queue, ir_queue):
+def read_data(file_list, path, color_queue, ir_queue):
+    folder_path = path
 
     for target in file_list:
 
         # if target != 'car10':
         #     continue
 
-        path = 'D:/Workspace/VOT2019-rgbtir/' + target
+        path = folder_path + '/' + target
 
         # color_img info
         color_path = '/'.join([path, 'color'])
         color_list = os.listdir(color_path)
+        color_list.sort()
 
         # length of each target_img
         img_num = len(color_list)
@@ -25,6 +27,7 @@ def read_data(file_list, color_queue, ir_queue):
         # ir_img info
         ir_path = '/'.join([path, 'ir'])
         ir_list = os.listdir(ir_path)
+        ir_list.sort()
 
         gt_path = '/'.join([path, 'groundtruth.txt'])
 
