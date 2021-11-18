@@ -51,14 +51,15 @@ def cover_img(raw_img):
 
 
 def sensor_miss_area(ir_image, gt_val):
-    expand = 0.2
+    expand = 2
     x1 = max(0, int(gt_val[0][0] - (gt_val[1][0] - gt_val[0][0]) / 2 * expand))
     y1 = max(0, int(gt_val[0][1] - (gt_val[1][1] - gt_val[0][1]) / 2 * expand))
     x2 = min(ir_image.shape[0], int(gt_val[1][0] + (gt_val[1][0] - gt_val[0][0]) / 2 * expand))
     y2 = min(ir_image.shape[1], int(gt_val[1][1] + (gt_val[1][1] - gt_val[0][1]) / 2 * expand))
-    target_area = ir_image[y1:y2, x1:x2]
+    # target_area = ir_image[y1:y2, x1:x2]
+    exp_val = ((x1, y1), (x2, y2))
 
-    return target_area
+    return exp_val
 
 
 def show_res(tracker_name, color_res_queue, ir_res_queue):
