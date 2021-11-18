@@ -12,8 +12,8 @@ def read_data(file_list, path, color_queue, ir_queue):
 
     for target in file_list:
 
-        # if target != 'car10':
-        #     continue
+        if target == 'car10':
+            continue
 
         path = folder_path + '/' + target
 

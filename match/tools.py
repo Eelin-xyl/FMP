@@ -51,7 +51,8 @@ def cover_img(raw_img):
 
 
 def sensor_miss_area(ir_image, gt_val):
-    expand = 2
+
+    expand = 1
     x1 = max(0, int(gt_val[0][0] - (gt_val[1][0] - gt_val[0][0]) / 2 * expand))
     y1 = max(0, int(gt_val[0][1] - (gt_val[1][1] - gt_val[0][1]) / 2 * expand))
     x2 = min(ir_image.shape[0], int(gt_val[1][0] + (gt_val[1][0] - gt_val[0][0]) / 2 * expand))

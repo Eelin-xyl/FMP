@@ -21,6 +21,7 @@ def track_ir(tracker_model, ir_queue, ir_res_queue, label_queue):
 
             ir_image = cover_img(ir_image)
             exp_val = sensor_miss_area(ir_image, gt_val)
+            ir_image = ir_image[exp_val[0][1]:exp_val[1][1], exp_val[0][0]:exp_val[1][0]]
 
             w, h = tmp_image.shape[::-1]
             res = cv2.matchTemplate(ir_image, tmp_image, cv2.TM_CCOEFF_NORMED)
@@ -28,6 +29,9 @@ def track_ir(tracker_model, ir_queue, ir_res_queue, label_queue):
             top_left = max_loc
             # （如果模板方法是平方差或者归一化平方差，要用min_loc）
             bottom_right = (top_left[0] + w, top_left[1] + h)
+            # figure out the relative coordinate
+            top_left = (top_left[0] + exp_val[0][0], top_left[1] + exp_val[0][1])
+            bottom_right = (bottom_right[0] + exp_val[0][0], bottom_right[1] + exp_val[0][1])
             cv2.rectangle(ir_res_image, top_left, bottom_right, (255, 0, 0), 2)
             cv2.rectangle(ir_res_image, (exp_val[0][0], exp_val[0][1]), (exp_val[1][0], exp_val[1][1]),
                           (0, 0, 255), thickness=2)
