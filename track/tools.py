@@ -7,6 +7,7 @@ import cv2
 
 
 def is_cross(m, n):
+
     # m = [
     #         (x1, y1),     LeftTop
     #         (x2, y2)      RightBottom
