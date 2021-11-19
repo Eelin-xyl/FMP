@@ -7,7 +7,7 @@ import cv2
 import platform
 from read_port import read_data
 from tracker_color import track_color
-from tracker_ir import track_ir
+from match_ir import track_ir
 from tools import show_res
 
 
@@ -27,11 +27,13 @@ def track(tracker_model, tracker_name):
         break
     file_list.sort()
 
-    color_queue = Queue()
-    ir_queue = Queue()
-    color_res_queue = Queue()
-    ir_res_queue = Queue()
-    tmp_queue = Queue()
+    len_queue = 10
+
+    color_queue = Queue(len_queue)
+    ir_queue = Queue(len_queue)
+    color_res_queue = Queue(len_queue)
+    ir_res_queue = Queue(len_queue)
+    tmp_queue = Queue(len_queue)
 
     read_process = Process(target=read_data, args=(file_list, path, color_queue, ir_queue))
     read_process.start()

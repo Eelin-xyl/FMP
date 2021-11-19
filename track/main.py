@@ -27,10 +27,12 @@ def track(tracker_model, tracker_name):
         break
     file_list.sort()
 
-    color_queue = Queue()
-    ir_queue = Queue()
-    color_res_queue = Queue()
-    ir_res_queue = Queue()
+    len_queue = 10
+
+    color_queue = Queue(len_queue)
+    ir_queue = Queue(len_queue)
+    color_res_queue = Queue(len_queue)
+    ir_res_queue = Queue(len_queue)
 
     read_process = Process(target=read_data, args=(file_list, path, color_queue, ir_queue))
     read_process.start()

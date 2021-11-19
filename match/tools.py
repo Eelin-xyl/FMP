@@ -42,11 +42,11 @@ def is_cross(m, n):
     # return abs(w[1] - w[2]) * abs(h[1] - h[2])
 
 
-def cover_img(raw_img):
+def covert_img(raw_img):
 
     raw_img = cv2.cvtColor(raw_img, cv2.COLOR_BGR2GRAY)
-    raw_img = cv2.adaptiveThreshold(raw_img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,
-                                    5, 3)
+    # raw_img = cv2.adaptiveThreshold(raw_img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,
+    #                                 5, 3)
 
     return raw_img
 

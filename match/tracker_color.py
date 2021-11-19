@@ -4,7 +4,7 @@ import multiprocessing
 from multiprocessing import Pipe, Process, shared_memory, Queue
 import numpy as np
 import cv2
-from tools import is_cross, cover_img
+from tools import is_cross, covert_img
 
 
 def track_color(tracker_model, color_queue, color_res_queue, tmp_queue):
@@ -39,7 +39,7 @@ def track_color(tracker_model, color_queue, color_res_queue, tmp_queue):
                               (0, 255, 0), thickness=2)
 
             tmp_image = color_image[gt_val[0][1]:gt_val[1][1], gt_val[0][0]:gt_val[1][0]]
-            tmp_image = cover_img(tmp_image)
+            tmp_image = covert_img(tmp_image)
 
             color_res_queue.put(color_res_image)
             tmp_queue.put((tmp_image, gt_val))
