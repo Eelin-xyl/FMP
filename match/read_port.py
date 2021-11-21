@@ -17,11 +17,11 @@ def read_data(file_list, path, color_queue, ir_queue):
         if target == 'car10':
             continue
 
-        if target == 'car':
-            init = True
-
-        if not init:
-            continue
+        # if target == 'car':
+        #     init = True
+        #
+        # if not init:
+        #     continue
 
         path = folder_path + '/' + target
 
@@ -48,6 +48,7 @@ def read_data(file_list, path, color_queue, ir_queue):
             # print(data)
 
         for idx in range(img_num):
+
             gt_val = gt_val_list[idx].split(',')
             gt_val = tuple([int(float(i)) for i in gt_val])
 
