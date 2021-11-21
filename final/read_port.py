@@ -9,24 +9,15 @@ import cv2
 def read_data(file_list, path, color_queue, ir_queue):
 
     folder_path = path
-
-    init = False
-    num = 0
+    # init = False
 
     for target in file_list:
 
         if target == 'car10':
             continue
 
-        num += 1
-        if num <= 2:
-            continue
-
         # if target == 'car':
         #     init = True
-        #
-        # if not init:
-        #     continue
 
         path = folder_path + '/' + target
 
