@@ -17,6 +17,10 @@ def track(tracker_model, tracker_name):
     path = ''
     if sys == "Windows":
         path = 'D:/Workspace/VOT2019-rgbtir'
+
+        if not os.path.exists(path):
+            path = 'C:/Users/xyl-e/Desktop/Workspace/VOT2019-rgbtir'
+
     if sys == "Linux":
         path = '/home/eelin/Desktop/VOT2019-rgbtir'
 
