@@ -7,9 +7,9 @@ import cv2
 from tools import covert_img, sensor_miss_area
 
 
-def track_ir(tracker_model, ir_queue, ir_res_queue, tmp_queue):
+def matcher_ir(matcher_model, ir_queue, ir_res_queue, tmp_queue):
 
-    ir_tracker = tracker_model()
+    ir_matcher = matcher_model
 
     while True:
 
@@ -23,12 +23,16 @@ def track_ir(tracker_model, ir_queue, ir_res_queue, tmp_queue):
             exp_val = sensor_miss_area(ir_image, gt_val)
             ir_image = ir_image[exp_val[0][1]:exp_val[1][1], exp_val[0][0]:exp_val[1][0]]
 
-            w, h = tmp_image.shape[::-1]
-            res = cv2.matchTemplate(ir_image, tmp_image, cv2.TM_CCOEFF_NORMED)
+            w = tmp_image.shape[1]
+            h = tmp_image.shape[0]
+
+            res = cv2.matchTemplate(ir_image, tmp_image, ir_matcher)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+
+            # if match_tmp method is SQDIFF or SQDIFF_NORMED, using min_loc
             top_left = max_loc
-            # （如果模板方法是平方差或者归一化平方差，要用min_loc）
             bottom_right = (top_left[0] + w, top_left[1] + h)
+
             # figure out the relative coordinate
             top_left = (top_left[0] + exp_val[0][0], top_left[1] + exp_val[0][1])
             bottom_right = (bottom_right[0] + exp_val[0][0], bottom_right[1] + exp_val[0][1])

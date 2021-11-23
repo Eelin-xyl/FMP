@@ -45,10 +45,9 @@ def is_cross(m, n):
 def covert_img(raw_img):
 
     raw_img = cv2.cvtColor(raw_img, cv2.COLOR_BGR2GRAY)
-    # raw_img = cv2.adaptiveThreshold(raw_img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,
-    #                                 5, 3)
-    raw_img = cv2.GaussianBlur(raw_img, (3, 3), 0)  # 用高斯滤波处理原图像降噪
-    raw_img = cv2.Canny(raw_img, 50, 150)
+    # raw_img = cv2.adaptiveThreshold(raw_img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5, 3)
+    # raw_img = cv2.GaussianBlur(raw_img, (3, 3), 0)  # 用高斯滤波处理原图像降噪
+    # raw_img = cv2.Canny(raw_img, 50, 150)
 
     return raw_img
 
@@ -65,7 +64,7 @@ def sensor_miss_area(ir_image, gt_val):
     return exp_val
 
 
-def show_res(tracker_name, color_res_queue, ir_res_queue):
+def show_res(tracker_name, matcher_name, color_res_queue, ir_res_queue):
 
     while True:
 
@@ -73,18 +72,17 @@ def show_res(tracker_name, color_res_queue, ir_res_queue):
 
             color_res = color_res_queue.get()
             ir_res = ir_res_queue.get()
-            cv2.imshow(tracker_name + ' - color', color_res[0])
 
-            cv2.namedWindow(tracker_name + ' - color - tmp', 0)
-            cv2.resizeWindow(tracker_name + ' - color - tmp',
-                             int(color_res[1].shape[1] * 3), int(color_res[1].shape[0] * 3))
-            cv2.imshow(tracker_name + ' - color - tmp', color_res[1])
+            cv2.imshow(tracker_name + ' - Color', color_res[0])
 
-            cv2.imshow(tracker_name + ' - ir', ir_res[0])
+            cv2.namedWindow('COLOR - Tmp', 0)
+            cv2.resizeWindow('COLOR - Tmp', int(color_res[1].shape[1] * 3), int(color_res[1].shape[0] * 3))
+            cv2.imshow('COLOR - Tmp', color_res[1])
 
-            cv2.namedWindow(tracker_name + ' - ir - area', 0)
-            cv2.resizeWindow(tracker_name + ' - ir - area',
-                             int(ir_res[1].shape[1] * 3), int(ir_res[1].shape[0] * 3))
-            cv2.imshow(tracker_name + ' - ir - area', ir_res[1])
+            cv2.imshow(matcher_name + ' - Ir', ir_res[0])
+
+            cv2.namedWindow('IR - Area', 0)
+            cv2.resizeWindow('IR - Area', int(ir_res[1].shape[1] * 3), int(ir_res[1].shape[0] * 3))
+            cv2.imshow('IR - Area', ir_res[1])
 
             cv2.waitKey(40)
