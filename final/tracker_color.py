@@ -41,8 +41,9 @@ def track_color(tracker_model, color_queue, color_res_queue, tmp_queue):
             # color_image = cv2.split(color_image)
             # color_image = color_image[2]
 
-            tmp_image = color_image[gt_val[0][1]:gt_val[1][1], gt_val[0][0]:gt_val[1][0]]
-            tmp_image = covert_img(tmp_image)
+            target_image = color_image[gt_val[0][1]:gt_val[1][1], gt_val[0][0]:gt_val[1][0]]
+            target_image = cv2.medianBlur(target_image, 5)
+            tmp_image = covert_img(target_image)
 
-            color_res_queue.put((color_res_image, tmp_image))
+            color_res_queue.put((color_res_image, target_image, tmp_image))
             tmp_queue.put((tmp_image, gt_val))
