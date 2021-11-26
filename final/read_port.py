@@ -37,7 +37,7 @@ def read_data(file_list, path, color_queue, ir_queue):
         # SelectROI
         first_image = cv2.imread(os.path.join(color_path, color_list[0]))
         roi = cv2.selectROI('SelectROI', first_image, True, False)
-        # cv2.destroyWindow('SelectROI')
+        cv2.destroyWindow('SelectROI')
 
         for idx in range(img_num):
 

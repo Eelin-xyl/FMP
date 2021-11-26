@@ -36,7 +36,7 @@ def detection(track_method, match_method):
         break
     file_list.sort()
 
-    len_queue = 5
+    len_queue = 3
 
     color_queue = Queue(len_queue)
     ir_queue = Queue(len_queue)

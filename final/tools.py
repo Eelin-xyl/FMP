@@ -11,7 +11,7 @@ def covert_img(raw_img):
     raw_img = cv2.cvtColor(raw_img, cv2.COLOR_BGR2GRAY)
     # raw_img = cv2.adaptiveThreshold(raw_img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5, 3)
     # raw_img = cv2.GaussianBlur(raw_img, (3, 3), 0)  # 用高斯滤波处理原图像降噪
-    # raw_img = cv2.Canny(raw_img, 50, 150)
+    raw_img = cv2.Canny(raw_img, 50, 150)
 
     return raw_img
 
