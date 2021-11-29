@@ -10,11 +10,17 @@ def read_data(file_list, path, color_queue, ir_queue):
 
     folder_path = path
     # init = False
+    avoid = ['car10', 'carLight']
 
     for target in file_list:
 
-        if target == 'car10':
+        if target in avoid:
             continue
+
+        # if target != 'caraftertree':
+        #     continue
+
+        print(target)
 
         # if target == 'car':
         #     init = True

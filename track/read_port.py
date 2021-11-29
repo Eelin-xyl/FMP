@@ -15,6 +15,9 @@ def read_data(file_list, path, color_queue, ir_queue):
         if target == 'car10':
             continue
 
+        if target != 'caraftertree':
+            continue
+
         path = folder_path + '/' + target
 
         # color_img info

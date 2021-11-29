@@ -25,17 +25,22 @@ def track_color(tracker_model, color_queue, color_res_queue, tmp_queue):
                 # create tracker
                 init_roi = roi
                 color_tracker = tracker_model()
-                box1 = roi
-                color_tracker.init(color_res_image, box1)
+                bbox1 = roi
+                color_tracker.init(color_res_image, bbox1)
                 cv2.rectangle(color_res_image, (roi[0], roi[1]), (roi[0] + roi[2], roi[1] + roi[3]),
                               (0, 255, 0), thickness=2)
                 gt_val = ((int(roi[0]), int(roi[1])), (int(roi[0] + roi[2]), int(roi[1] + roi[3])))
 
             else:
-                hit, box = color_tracker.update(color_res_image)
-                cv2.rectangle(color_res_image, (int(box[0]), int(box[1])), (int(box[0] + box[2]), int(box[1] + box[3])),
+                hit, bbox = color_tracker.update(color_res_image)
+
+                # limit the area
+                bbox = (max(0, bbox[0]), max(0, bbox[1]), min(color_res_image.shape[1], bbox[0] + bbox[2]) - bbox[0],
+                        min(color_res_image.shape[0], bbox[1] + bbox[3]) - bbox[1])
+
+                cv2.rectangle(color_res_image, (int(bbox[0]), int(bbox[1])), (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3])),
                               (255, 0, 0), 2)
-                gt_val = ((int(box[0]), int(box[1])), (int(box[0] + box[2]), int(box[1] + box[3])))
+                gt_val = ((int(bbox[0]), int(bbox[1])), (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3])))
 
             # color_image = cv2.cvtColor(color_image, cv2.COLOR_BGR2HSV)
             # color_image = cv2.split(color_image)

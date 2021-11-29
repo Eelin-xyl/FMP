@@ -13,10 +13,8 @@ from tools import show_res
 
 def detection(track_method, match_method):
 
-    tracker_model = track_method[0]
-    tracker_name = track_method[1]
-    matcher_model = match_method[0]
-    matcher_name = match_method[1]
+    tracker_model, tracker_name = track_method
+    matcher_model, matcher_name = match_method
 
     sys = platform.system()
 

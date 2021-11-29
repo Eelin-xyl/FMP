@@ -23,8 +23,7 @@ def matcher_ir(matcher_model, ir_queue, ir_res_queue, tmp_queue):
             raw_image = area_image.copy()
             area_image = covert_img(area_image)
 
-            w = tmp_image.shape[1]
-            h = tmp_image.shape[0]
+            h, w = tmp_image.shape[:2]
 
             res = cv2.matchTemplate(area_image, tmp_image, ir_matcher)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
