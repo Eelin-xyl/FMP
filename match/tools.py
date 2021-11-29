@@ -87,6 +87,8 @@ def covert_img(raw_img):
     # acu 19473893 (gauss and canny) 19306738 (color without medianBlur)
     # acu 19325636 (adaptivethreshould and canny) 18859810 (color without medianBlur)
 
+    # miou  (gray and canny)
+
     return raw_img
 
 

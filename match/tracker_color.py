@@ -10,13 +10,14 @@ from tools import is_cross, covert_img
 def track_color(tracker_model, color_queue, color_res_queue, tmp_queue):
 
     color_tracker = tracker_model()
+    init_scene = ''
 
     while True:
 
         if color_queue.empty():
             continue
         else:
-            color_image, gt_val = color_queue.get()
+            color_image, gt_val, scene = color_queue.get()
             color_res_image = color_image.copy()
             hit, bbox = color_tracker.update(color_res_image)
 
@@ -27,7 +28,7 @@ def track_color(tracker_model, color_queue, color_res_queue, tmp_queue):
             box1 = ((gt_val[0][0], gt_val[0][1]), (gt_val[1][0], gt_val[1][1]))
             box2 = ((bbox[0], bbox[1]), (bbox[0] + bbox[2], bbox[1] + bbox[3]))
 
-            if hit and is_cross(box1, box2):
+            if hit and is_cross(box1, box2) and scene == init_scene:
 
                 cv2.rectangle(color_res_image, (gt_val[0][0], gt_val[0][1]), (gt_val[1][0], gt_val[1][1]),
                               (0, 0, 255), 2)
@@ -36,7 +37,8 @@ def track_color(tracker_model, color_queue, color_res_queue, tmp_queue):
                 gt_val = ((int(bbox[0]), int(bbox[1])), (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3])))
 
             else:
-                # Not yet init or Track failed
+                # Not yet init or Track failed or Scene changed
+                init_scene = scene
                 color_tracker = tracker_model()
                 bbox1 = (gt_val[0][0], gt_val[0][1], gt_val[1][0] - gt_val[0][0], gt_val[1][1] - gt_val[0][1])
                 color_tracker.init(color_res_image, bbox1)

@@ -10,15 +10,15 @@ def read_data(file_list, path, color_queue, ir_queue):
 
     folder_path = path
 
-    for target in file_list:
+    for secen in file_list:
 
-        if target == 'car10':
+        if secen == 'car10':
             continue
 
-        if target != 'caraftertree':
+        if secen != 'caraftertree':
             continue
 
-        path = folder_path + '/' + target
+        path = folder_path + '/' + secen
 
         # color_img info
         color_path = '/'.join([path, 'color'])

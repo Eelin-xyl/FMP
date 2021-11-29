@@ -12,20 +12,20 @@ def read_data(file_list, path, color_queue, ir_queue):
     # init = False
     avoid = ['car10', 'carLight']
 
-    for target in file_list:
+    for secen in file_list:
 
-        if target in avoid:
+        if secen in avoid:
             continue
 
-        # if target != 'caraftertree':
+        # if secen != 'caraftertree':
         #     continue
 
-        print(target)
+        print(secen)
 
-        # if target == 'car':
+        # if secen == 'car':
         #     init = True
 
-        path = folder_path + '/' + target
+        path = folder_path + '/' + secen
 
         # color_img info
         color_path = '/'.join([path, 'color'])
@@ -65,5 +65,5 @@ def read_data(file_list, path, color_queue, ir_queue):
             color_gt_val = ((min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5])),
                             (max(gt_val[0], gt_val[4]), max(gt_val[1], gt_val[5])))
 
-            color_queue.put((color_image, color_gt_val))
+            color_queue.put((color_image, color_gt_val, secen))
             ir_queue.put(ir_image)
