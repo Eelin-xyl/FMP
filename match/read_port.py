@@ -10,22 +10,22 @@ def read_data(file_list, path, color_queue, ir_queue):
 
     folder_path = path
     # init = False
-    avoid = ['car10', 'carLight']
+    bypass = ['car10', 'carLight']
 
-    for secen in file_list:
+    for scene in file_list:
 
-        if secen in avoid:
+        if scene in bypass:
             continue
 
-        # if secen != 'caraftertree':
+        # if scene != 'caraftertree':
         #     continue
 
-        print(secen)
+        print(scene)
 
-        # if secen == 'car':
+        # if scene == 'car':
         #     init = True
 
-        path = folder_path + '/' + secen
+        path = folder_path + '/' + scene
 
         # color_img info
         color_path = '/'.join([path, 'color'])
@@ -65,5 +65,5 @@ def read_data(file_list, path, color_queue, ir_queue):
             color_gt_val = ((min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5])),
                             (max(gt_val[0], gt_val[4]), max(gt_val[1], gt_val[5])))
 
-            color_queue.put((color_image, color_gt_val, secen))
+            color_queue.put((color_image, color_gt_val, scene))
             ir_queue.put(ir_image)

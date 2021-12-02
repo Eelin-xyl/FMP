@@ -11,7 +11,9 @@ from tracker_ir import track_ir
 from tools import show_res
 
 
-def track(tracker_model, tracker_name):
+def detection(track_method):
+
+    tracker_model, tracker_name = track_method
 
     sys = platform.system()
 
@@ -31,7 +33,7 @@ def track(tracker_model, tracker_name):
         break
     file_list.sort()
 
-    len_queue = 10
+    len_queue = 5
 
     color_queue = Queue(len_queue)
     ir_queue = Queue(len_queue)
@@ -52,9 +54,13 @@ def track(tracker_model, tracker_name):
 
 
 if __name__ == "__main__":
-    # track(cv2.TrackerBoosting_create, 'BOOSTING')    # 0
-    # track(cv2.TrackerMIL_create, 'MIL')    # 0
-    # track(cv2.TrackerKCF_create, 'KCF')    # 1074
-    # track(cv2.TrackerTLD_create, 'TLD')    # 34
-    # track(cv2.TrackerMedianFlow_create, 'MEDIANFLOW')    # 113
-    track(cv2.TrackerCSRT_create, 'CSRT')  # 16
+
+    # track_algo = (cv2.TrackerBoosting_create, 'BOOSTING')    # 0
+    # track_algo = (cv2.TrackerMIL_create, 'MIL')    # 0
+    # track_algo = (cv2.TrackerKCF_create, 'KCF')    # 1074
+    # track_algo = (cv2.TrackerTLD_create, 'TLD')    # 34
+    # track_algo = (cv2.TrackerMedianFlow_create, 'MEDIANFLOW')    # 113
+    track_algo = (cv2.TrackerCSRT_create, 'CSRT')  # 16
+
+    detection(track_algo)
+

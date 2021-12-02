@@ -10,22 +10,22 @@ def read_data(file_list, path, color_queue, ir_queue):
 
     folder_path = path
     # init = False
-    avoid = ['car10', 'carLight']
+    bypass = ['car10', 'carLight']
 
-    for target in file_list:
+    for scene in file_list:
 
-        if target in avoid:
+        if scene in bypass:
             continue
 
-        # if target != 'caraftertree':
+        # if scene != 'caraftertree':
         #     continue
 
-        print(target)
+        print(scene)
 
-        # if target == 'car':
+        # if scene == 'car':
         #     init = True
 
-        path = folder_path + '/' + target
+        path = folder_path + '/' + scene
 
         # color_img info
         color_path = '/'.join([path, 'color'])

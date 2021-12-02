@@ -9,16 +9,23 @@ import cv2
 def read_data(file_list, path, color_queue, ir_queue):
 
     folder_path = path
+    # init = False
+    bypass = ['car10', 'carLight']
 
-    for secen in file_list:
+    for scene in file_list:
 
-        if secen == 'car10':
+        if scene in bypass:
             continue
 
-        if secen != 'caraftertree':
-            continue
+        # if scene != 'caraftertree':
+        #     continue
 
-        path = folder_path + '/' + secen
+        print(scene)
+
+        # if scene == 'car':
+        #     init = True
+
+        path = folder_path + '/' + scene
 
         # color_img info
         color_path = '/'.join([path, 'color'])
@@ -61,5 +68,5 @@ def read_data(file_list, path, color_queue, ir_queue):
             ir_gt_val = ((min(gt_val[2], gt_val[6]), min(gt_val[3], gt_val[7])),
                          (max(gt_val[2], gt_val[6]), max(gt_val[3], gt_val[7])))
 
-            color_queue.put((color_image, color_gt_val))
-            ir_queue.put((ir_image, ir_gt_val))
+            color_queue.put((color_image, color_gt_val, scene))
+            ir_queue.put((ir_image, ir_gt_val, scene))
