@@ -49,11 +49,12 @@ def detection(track_method):
 
 if __name__ == "__main__":
 
-    # track_algo = (cv2.TrackerBoosting_create, 'BOOSTING')    # 0
-    # track_algo = (cv2.TrackerMIL_create, 'MIL')    # 0
-    # track_algo = (cv2.TrackerKCF_create, 'KCF')    # 1074
-    # track_algo = (cv2.TrackerTLD_create, 'TLD')    # 34
-    # track_algo = (cv2.TrackerMedianFlow_create, 'MEDIANFLOW')    # 113
+    # track_algo = (cv2.TrackerBoosting_create, 'BOOSTING')    # miou 0.5116573676695796 miss_hit 0 miss 182
+    # track_algo = (cv2.TrackerMIL_create, 'MIL')    # miou 0.48110923764220076 miss_hit 0 miss 223
+    # track_algo = (cv2.TrackerMOSSE_create, 'MOSSE') miss 4000+
+    # track_algo = (cv2.TrackerKCF_create, 'KCF')    # miou 0.637434512129973 miss_hit 1263 miss 1347
+    # track_algo = (cv2.TrackerTLD_create, 'TLD')    # miou 0.5011713260977059 miss_hit 18 miss 1859
+    # track_algo = (cv2.TrackerMedianFlow_create, 'MEDIANFLOW')    # miou 0.48711878891862326 miss_hit 90 miss 321
     track_algo = (cv2.TrackerCSRT_create, 'CSRT')  # miou 0.542870060186356 miss_hit 9  miss 125
 
     detection(track_algo)
