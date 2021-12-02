@@ -8,7 +8,7 @@ def get_out_scoremap(net):
 
 def feed_net(net, in_):
     """
-    Load prepared input into net.
+    Load prepared choose_target into net.
     """
     net.blobs['data'].reshape(1, *in_.shape)
     net.blobs['data'].data[...] = in_

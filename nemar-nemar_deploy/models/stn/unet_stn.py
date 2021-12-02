@@ -11,13 +11,13 @@ sampling_mode = 'bilinear'
 # The number of filters in each block of the encoding part (down-sampling).
 ndf = {'A': [32, 64, 64, 64, 64, 64, 64], }
 # The number of filters in each block of the decoding part (up-sampling).
-# If len(ndf[cfg]) > len(nuf[cfg]) - then the deformation field is up-sampled to match the input size.
+# If len(ndf[cfg]) > len(nuf[cfg]) - then the deformation field is up-sampled to match the choose_target size.
 nuf = {'A': [64, 64, 64, 64, 64, 64, 32], }
 # Indicate if res-blocks are used in the down-sampling path.
 use_down_resblocks = {'A': True, }
 # indicate the number of res-blocks applied on the encoded features.
 resnet_nblocks = {'A': 3, }
-# Indicate if the a final refinement layer is applied on the before deriving the deformation field
+# Indicate if the a choose_target refinement layer is applied on the before deriving the deformation field
 refine_output = {'A': True, }
 # The activation used in the down-sampling path.
 down_activation = {'A': 'leaky_relu', }
@@ -103,7 +103,7 @@ class ResUnet(torch.nn.Module):
 
 
 class UnetSTN(nn.Module):
-    """This class is generates and applies the deformable transformation on the input images."""
+    """This class is generates and applies the deformable transformation on the choose_target images."""
 
     def __init__(self, in_channels_a, in_channels_b, height, width, cfg, init_func, stn_bilateral_alpha,
                  init_to_identity, multi_resolution_regularization):

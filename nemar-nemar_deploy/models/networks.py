@@ -118,7 +118,7 @@ def define_G(input_nc, output_nc, ngf, netG, norm='batch', use_dropout=False, in
     """Create a generator
 
     Parameters:
-        input_nc (int) -- the number of channels in input images
+        input_nc (int) -- the number of channels in choose_target images
         output_nc (int) -- the number of channels in output images
         ngf (int) -- the number of filters in the last conv layer
         netG (str) -- the architecture's name: resnet_9blocks | resnet_6blocks | unet_256 | unet_128
@@ -131,7 +131,7 @@ def define_G(input_nc, output_nc, ngf, netG, norm='batch', use_dropout=False, in
     Returns a generator
 
     Our current implementation provides two types of generators:
-        U-Net: [unet_128] (for 128x128 input images) and [unet_256] (for 256x256 input images)
+        U-Net: [unet_128] (for 128x128 choose_target images) and [unet_256] (for 256x256 choose_target images)
         The original U-Net paper: https://arxiv.org/abs/1505.04597
 
         Resnet-based generator: [resnet_6blocks] (with 6 Resnet blocks) and [resnet_9blocks] (with 9 Resnet blocks)
@@ -169,7 +169,7 @@ def define_D(input_nc, ndf, netD, n_layers_D=3, norm='batch', init_type='normal'
     """Create a discriminator
 
     Parameters:
-        input_nc (int)     -- the number of channels in input images
+        input_nc (int)     -- the number of channels in choose_target images
         ndf (int)          -- the number of filters in the first conv layer
         netD (str)         -- the architecture's name: basic | n_layers | pixel
         n_layers_D (int)   -- the number of conv layers in the discriminator; effective when netD=='n_layers'
@@ -216,7 +216,7 @@ class GANLoss(nn.Module):
     """Define different GAN objectives.
 
     The GANLoss class abstracts away the need to create the target label tensor
-    that has the same size as the input.
+    that has the same size as the choose_target.
     """
 
     def __init__(self, gan_mode, target_real_label=1.0, target_fake_label=0.0):
@@ -244,14 +244,14 @@ class GANLoss(nn.Module):
             raise NotImplementedError('gan mode %s not implemented' % gan_mode)
 
     def get_target_tensor(self, prediction, target_is_real):
-        """Create label tensors with the same size as the input.
+        """Create label tensors with the same size as the choose_target.
 
         Parameters:
             prediction (tensor) - - tpyically the prediction from a discriminator
             target_is_real (bool) - - if the ground truth label is for real images or fake images
 
         Returns:
-            A label tensor filled with ground truth label, and with the size of the input
+            A label tensor filled with ground truth label, and with the size of the choose_target
         """
 
         if target_is_real:
@@ -331,7 +331,7 @@ class ResnetGenerator(nn.Module):
         """Construct a Resnet-based generator
 
         Parameters:
-            input_nc (int)      -- the number of channels in input images
+            input_nc (int)      -- the number of channels in choose_target images
             output_nc (int)     -- the number of channels in output images
             ngf (int)           -- the number of filters in the last conv layer
             norm_layer          -- normalization layer
@@ -452,7 +452,7 @@ class UnetGenerator(nn.Module):
     def __init__(self, input_nc, output_nc, num_downs, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False):
         """Construct a Unet generator
         Parameters:
-            input_nc (int)  -- the number of channels in input images
+            input_nc (int)  -- the number of channels in choose_target images
             output_nc (int) -- the number of channels in output images
             num_downs (int) -- the number of downsamplings in UNet. For example, # if |num_downs| == 7,
                                 image of size 128x128 will become of size 1x1 # at the bottleneck
@@ -496,7 +496,7 @@ class UnetSkipConnectionBlock(nn.Module):
         Parameters:
             outer_nc (int) -- the number of filters in the outer conv layer
             inner_nc (int) -- the number of filters in the inner conv layer
-            input_nc (int) -- the number of channels in input images/features
+            input_nc (int) -- the number of channels in choose_target images/features
             submodule (UnetSkipConnectionBlock) -- previously defined submodules
             outermost (bool)    -- if this module is the outermost module
             innermost (bool)    -- if this module is the innermost module
@@ -560,7 +560,7 @@ class NLayerDiscriminator(nn.Module):
         """Construct a PatchGAN discriminator
 
         Parameters:
-            input_nc (int)  -- the number of channels in input images
+            input_nc (int)  -- the number of channels in choose_target images
             ndf (int)       -- the number of filters in the last conv layer
             n_layers (int)  -- the number of conv layers in the discriminator
             norm_layer      -- normalization layer
@@ -609,7 +609,7 @@ class PixelDiscriminator(nn.Module):
         """Construct a 1x1 PatchGAN discriminator
 
         Parameters:
-            input_nc (int)  -- the number of channels in input images
+            input_nc (int)  -- the number of channels in choose_target images
             ndf (int)       -- the number of filters in the last conv layer
             norm_layer      -- normalization layer
         """

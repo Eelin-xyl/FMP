@@ -4,7 +4,7 @@ import torch
 def smoothness_loss(deformation, img=None, alpha=0.0):
     """Calculate the smoothness loss of the given defromation field
 
-    :param deformation: the input deformation
+    :param deformation: the choose_target deformation
     :param img: the image that the deformation is applied on (will be used for the bilateral filtering).
     :param alpha: the alpha coefficient used in the bilateral filtering.
     :return:

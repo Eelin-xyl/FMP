@@ -84,7 +84,7 @@ class AffineNetwork(nn.Module):
 
 
 class AffineSTN(nn.Module):
-    """This class is generates and applies the affine transformation on the input images"""
+    """This class is generates and applies the affine transformation on the choose_target images"""
 
     def __init__(self, nc_a, nc_b, height, width, cfg, init_func):
         super(AffineSTN, self).__init__()

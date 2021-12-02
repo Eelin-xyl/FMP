@@ -66,11 +66,11 @@ def cal_iou(box1, box2):
     return iou
 
 
-def show_res(tracker_name, color_res_queue, ir_res_queue):
+def show_res(tracker_name, color_res_queue):
 
     while True:
 
-        if not color_res_queue.empty() and not ir_res_queue.empty():
-            cv2.imshow(tracker_name + ' - color', color_res_queue.get())
-            cv2.imshow(tracker_name + ' - ir', ir_res_queue.get())
-            cv2.waitKey(40)
+        if not color_res_queue.empty():
+            color_img = color_res_queue.get()
+            # cv2.imshow(tracker_name + ' - color', color_img)
+            # cv2.waitKey(40)

@@ -64,12 +64,11 @@ if __name__ == "__main__":
     # track_algo = (cv2.TrackerMedianFlow_create, 'MEDIANFLOW')    # 113
     track_algo = (cv2.TrackerCSRT_create, 'CSRT')  # 16
 
-    # match_algo = (cv2.TM_SQDIFF, 'SQDIFF')
-    # match_algo = (cv2.TM_SQDIFF_NORMED, 'SQDIFF_NORMED')
-    # match_algo = (cv2.TM_CCORR, 'CCORR')
-    # match_algo = (cv2.TM_CCORR_NORMED, 'CCORR_NORMED')
-    # match_algo = (cv2.TM_CCOEFF, 'CCOEFF')
-    match_algo = (cv2.TM_CCOEFF_NORMED, 'CCOEFF_NORMED')
+    # match_algo = (cv2.TM_SQDIFF, 'SQDIFF')    # miou 0.40101886990901137 (gray and canny)
+    # match_algo = (cv2.TM_SQDIFF_NORMED, 'SQDIFF_NORMED')    # miou 0.14287952979672564 (gray and canny)
+    # match_algo = (cv2.TM_CCORR, 'CCORR')    # miou 0.5148832079943269 (gray and canny)
+    # match_algo = (cv2.TM_CCORR_NORMED, 'CCORR_NORMED')    # miou 0.5519358109655857 (gray and canny)
+    match_algo = (cv2.TM_CCOEFF, 'CCOEFF')    # miou 0.5566209724734446 (gray and canny)
+    # match_algo = (cv2.TM_CCOEFF_NORMED, 'CCOEFF_NORMED')    # miou 0.536817262918913 (gray and canny)
 
     detection(track_algo, match_algo)
-

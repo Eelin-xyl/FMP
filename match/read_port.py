@@ -42,7 +42,7 @@ def read_data(file_list, path, color_queue, ir_queue):
 
         gt_path = '/'.join([path, 'groundtruth.txt'])
 
-        # import groundtruth data
+        # import ground_truth data
         with open(gt_path, "r") as f:
 
             gt_file = f.read()  # Read file

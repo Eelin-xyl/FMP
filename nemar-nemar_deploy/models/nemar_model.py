@@ -104,7 +104,7 @@ class NEMARModel(BaseModel):
         if self.isTrain:  # define discriminator
             self.netD = networks.define_D(opt.output_nc + opt.input_nc, opt.ndf, opt.netD,
                                           opt.n_layers_D, opt.norm, opt.init_type, opt.init_gain, self.gpu_ids)
-            # We support multi-resolution discriminator - this could yield better performance for large input images.
+            # We support multi-resolution discriminator - this could yield better performance for large choose_target images.
             self.netD_multiresolution = []
             if opt.multi_resolution > 1:
                 for _ in range(self.opt.multi_resolution - 1):
@@ -141,7 +141,7 @@ class NEMARModel(BaseModel):
         self.optimizers.append(self.optimizer_R)
 
     def set_input(self, input):
-        """Unpack input data from the dataloader and perform necessary pre-processing steps.
+        """Unpack choose_target data from the dataloader and perform necessary pre-processing steps.
 
         Parameters:
             input (dict): include the data itself and its metadata information.

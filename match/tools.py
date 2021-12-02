@@ -82,15 +82,11 @@ def covert_img(raw_img):
     # raw_img = cv2.GaussianBlur(raw_img, (3, 3), 0)
     raw_img = cv2.Canny(raw_img, 50, 150)
 
-    # acu 14168945 (only gray) 14388514 (color without medianBlur)
-    # acu 20106497 (gray and canny) 20026761 (color without medianBlur)
-    # acu 19473893 (gauss and canny) 19306738 (color without medianBlur)
-    # acu 19325636 (adaptivethreshould and canny) 18859810 (color without medianBlur)
-
-    # miou 0.3673803935096333 (only gray)
-    # miou 0.536817262918913 (gray and canny)
-    # miou 0.5056186418634039 (gauss and canny)
-    # miou 0.4686126916064594 (adaptivaethreshould and canny)
+    # cv2.TM_CCOEFF_NORMED
+    # miou 0.3673803935096333 (only gray) 0.37293078716287253 (color without medianBlur)
+    # miou 0.536817262918913 (gray and canny) 0.524499019328563 (color without medianBlur)
+    # miou 0.5056186418634039 (gauss and canny) 0.5120990164005463 (color without medianBlur)
+    # miou 0.4686126916064594 (adaptivaethreshould and canny) 0.45016259260479696 (color without medianBlur)
 
     return raw_img
 

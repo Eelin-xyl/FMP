@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 
 
-def read_data(file_list, path, color_queue, ir_queue):
+def read_data(file_list, path, color_queue):
 
     folder_path = path
     # init = False
@@ -17,7 +17,7 @@ def read_data(file_list, path, color_queue, ir_queue):
         if scene in bypass:
             continue
 
-        # if scene != 'caraftertree':
+        # if scene != 'hotkettle':
         #     continue
 
         print(scene)
@@ -35,14 +35,9 @@ def read_data(file_list, path, color_queue, ir_queue):
         # length of each target_img
         img_num = len(color_list)
 
-        # ir_img info
-        ir_path = '/'.join([path, 'ir'])
-        ir_list = os.listdir(ir_path)
-        ir_list.sort()
-
         gt_path = '/'.join([path, 'groundtruth.txt'])
 
-        # import groundtruth data
+        # import ground_truth data
         with open(gt_path, "r") as f:
 
             gt_file = f.read()  # Read file
@@ -54,19 +49,12 @@ def read_data(file_list, path, color_queue, ir_queue):
             gt_val = gt_val_list[idx].split(',')
             gt_val = tuple([int(float(i)) for i in gt_val])
 
-            # get color and ir picture by cv2
+            # get color picture
             color_img = os.path.join(color_path, color_list[idx])
             color_image = cv2.imread(color_img)
-
-            ir_img = os.path.join(ir_path, ir_list[idx])
-            ir_image = cv2.imread(ir_img)
 
             # process gt_val
             color_gt_val = ((min(gt_val[0], gt_val[4]), min(gt_val[1], gt_val[5])),
                             (max(gt_val[0], gt_val[4]), max(gt_val[1], gt_val[5])))
 
-            ir_gt_val = ((min(gt_val[2], gt_val[6]), min(gt_val[3], gt_val[7])),
-                         (max(gt_val[2], gt_val[6]), max(gt_val[3], gt_val[7])))
-
             color_queue.put((color_image, color_gt_val, scene))
-            ir_queue.put((ir_image, ir_gt_val, scene))
