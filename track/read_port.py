@@ -17,7 +17,7 @@ def read_data(file_list, path, color_queue):
         if scene in bypass:
             continue
 
-        # if scene != 'hotkettle':
+        # if scene != 'baketballwaliking':
         #     continue
 
         print(scene)

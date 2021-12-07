@@ -11,10 +11,14 @@ def read_data(file_list, path, color_queue, ir_queue):
     folder_path = path
     # init = False
     bypass = ['car10', 'carLight']
+    region = ['aftertree', 'baginhand', 'bluecar', 'car4', 'car41', 'car66']
 
     for scene in file_list:
 
-        if scene in bypass:
+        # if scene in bypass:
+        #     continue
+
+        if scene not in region:
             continue
 
         # if scene != 'caraftertree':

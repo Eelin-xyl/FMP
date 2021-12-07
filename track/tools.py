@@ -72,5 +72,6 @@ def show_res(tracker_name, color_res_queue):
 
         if not color_res_queue.empty():
             color_img = color_res_queue.get()
-            # cv2.imshow(tracker_name + ' - color', color_img)
-            # cv2.waitKey(40)
+            cv2.imshow(tracker_name + ' - color', color_img)
+            cv2.waitKey(40)
+            # cv2.waitKey(-1)

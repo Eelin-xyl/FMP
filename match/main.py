@@ -57,18 +57,19 @@ def detection(track_method, match_method):
 
 if __name__ == "__main__":
 
-    # track_algo = (cv2.TrackerBoosting_create, 'BOOSTING')    # 0
-    # track_algo = (cv2.TrackerMIL_create, 'MIL')    # 0
-    # track_algo = (cv2.TrackerKCF_create, 'KCF')    # 1074
-    # track_algo = (cv2.TrackerTLD_create, 'TLD')    # 34
-    # track_algo = (cv2.TrackerMedianFlow_create, 'MEDIANFLOW')    # 113
-    track_algo = (cv2.TrackerCSRT_create, 'CSRT')  # 16
+    # track_algo = (cv2.TrackerMOSSE_create, 'MOSSE')              # miou -                 miss_hit 4000+ miss -
+    # track_algo = (cv2.TrackerMedianFlow_create, 'MEDIANFLOW')    # miou 0.487118788918623 miss_hit 90    miss 231
+    # track_algo = (cv2.TrackerTLD_create, 'TLD')                  # miou 0.501171326097705 miss_hit 18    miss 1841
+    # track_algo = (cv2.TrackerMIL_create, 'MIL')                  # miou 0.481109237642200 miss_hit 0     miss 223
+    # track_algo = (cv2.TrackerBoosting_create, 'BOOSTING')        # miou 0.511657367669579 miss_hit 0     miss 182
+    # track_algo = (cv2.TrackerKCF_create, 'KCF')                  # miou 0.637434512129973 miss_hit 1263  miss 84
+    track_algo = (cv2.TrackerCSRT_create, 'CSRT')                  # miou 0.542870060186356 miss_hit 9     miss 116
 
-    # match_algo = (cv2.TM_SQDIFF, 'SQDIFF')    # miou 0.40101886990901137 (gray and canny)
-    # match_algo = (cv2.TM_SQDIFF_NORMED, 'SQDIFF_NORMED')    # miou 0.14287952979672564 (gray and canny)
-    # match_algo = (cv2.TM_CCORR, 'CCORR')    # miou 0.5148832079943269 (gray and canny)
-    # match_algo = (cv2.TM_CCORR_NORMED, 'CCORR_NORMED')    # miou 0.5519358109655857 (gray and canny)
-    match_algo = (cv2.TM_CCOEFF, 'CCOEFF')    # miou 0.5566209724734446 (gray and canny)
-    # match_algo = (cv2.TM_CCOEFF_NORMED, 'CCOEFF_NORMED')    # miou 0.536817262918913 (gray and canny)
+    # match_algo = (cv2.TM_SQDIFF_NORMED, 'SQDIFF_NORMED')         # miou 0.142879529796725 (gray and canny)
+    # match_algo = (cv2.TM_SQDIFF, 'SQDIFF')                       # miou 0.401018869909011 (gray and canny)
+    # match_algo = (cv2.TM_CCORR, 'CCORR')                         # miou 0.514883207994326 (gray and canny)
+    # match_algo = (cv2.TM_CCOEFF_NORMED, 'CCOEFF_NORMED')         # miou 0.536817262918913 (gray and canny)
+    # match_algo = (cv2.TM_CCORR_NORMED, 'CCORR_NORMED')           # miou 0.551935810965585 (gray and canny)
+    match_algo = (cv2.TM_CCOEFF, 'CCOEFF')                         # miou 0.556620972473444 (gray and canny)
 
     detection(track_algo, match_algo)

@@ -152,3 +152,4 @@ def show_res(tracker_name, matcher_name, color_res_queue, ir_res_queue):
             cv2.imshow('IR - RAW - AREA', blank_ir)
 
             cv2.waitKey(40)
+            # cv2.waitKey(-1)
